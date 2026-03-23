@@ -1,0 +1,1387 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Default Configurazioni — Per Tipologia di Competizione</title>
+  <style>
+    :root {
+      --nav-h: 46px;
+      --comphdr-h: 54px;
+      --green: #2e7d32; --green-bg: #e8f5e9; --green-brd: #81c784;
+      --red: #c62828;   --red-bg:   #ffebee; --red-brd:   #ef9a9a;
+      --blue: #1a3a6b;  --blue-lt:  #dce6f1;
+      --head: #1c2d4f;  --brd: #c8d0dc;
+      --row: #f7f9ff;   --grey: #f5f5f5;
+      --amber: #795548; --amber-bg: #fff8e1;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; scroll-padding-top: calc(var(--nav-h) + 12px); }
+    body { font-family: 'Segoe UI', Arial, sans-serif; font-size: 13px; line-height: 1.5;
+           background: #eaeff7; color: #1a1a2e; padding: 14px; }
+
+    /* ── HEADER ── */
+    .doc-header { background: var(--head); color: #fff; padding: 18px 22px;
+                  border-radius: 10px; margin-bottom: 14px; }
+    .doc-header h1 { font-size: 19px; font-weight: 700; margin-bottom: 4px; }
+    .doc-header .meta { font-size: 11px; opacity: .65; }
+
+    /* ── STICKY NAV ── */
+    .navbar { position: sticky; top: 0; z-index: 100; background: var(--head);
+              padding: 7px 14px; border-radius: 8px; margin-bottom: 14px;
+              display: flex; align-items: center; flex-wrap: nowrap;
+              justify-content: space-between; gap: 0; }
+    .nav-left  { display: flex; gap: 5px; align-items: center; flex-shrink: 0; }
+    .nav-right { display: flex; flex-wrap: wrap; gap: 5px; align-items: center;
+                 justify-content: flex-end; }
+    /* prominent separator between reference links and competition links */
+    .nav-sep   { flex-shrink: 0; margin: 0 14px;
+                 width: 0; border-left: 1px solid rgba(255,255,255,.18);
+                 border-right: 1px solid rgba(255,255,255,.06);
+                 height: 22px; }
+    .nav-btn { display: inline-block; padding: 3px 9px; border-radius: 20px;
+               font-size: 11px; font-weight: 600; color: #fff;
+               background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.2);
+               text-decoration: none; transition: background .15s; }
+    .nav-btn:hover { background: rgba(255,255,255,.28); }
+    .nav-btn-ref { background: rgba(138,180,255,.18); border-color: rgba(138,180,255,.4); }
+    .nav-btn-ref:hover { background: rgba(138,180,255,.32); }
+
+    /* ── GENERIC CARD ── */
+    .card { background: #fff; border: 1px solid var(--brd); border-radius: 10px;
+            margin-bottom: 24px; }
+    .card-title { font-size: 13.5px; font-weight: 700; color: var(--blue);
+                  padding: 10px 18px; background: var(--blue-lt); border-bottom: 1px solid var(--brd); }
+    .card-body  { padding: 16px 18px; }
+
+    /* ── LEGEND ── */
+    .legend-bar { display: flex; flex-wrap: wrap; gap: 12px; background: #f4f7ff;
+                  padding: 9px 13px; border-radius: 6px; margin-bottom: 10px; }
+    .leg-item   { display: flex; align-items: center; gap: 5px; font-size: 11.5px; }
+    .leg-dot    { width: 13px; height: 13px; border-radius: 2px; border: 1px solid rgba(0,0,0,.15); }
+
+    /* ── PILLS ── */
+    .pill { display: inline-block; padding: 1px 7px; border-radius: 10px;
+            font-size: 11px; font-weight: 700; }
+    .p-on  { background: #c6efce; color: #1a5e25; }
+    .p-off { background: #ede7f6; color: #512da8; }
+    .p-val { background: #cfe2ff; color: #084298; }
+    .p-na  { background: #f0f0f0; color: #999; font-style: italic; font-weight: 400; }
+    .p-neu { background: #e2e3e5; color: #383d41; }
+    .p-warn { background: var(--amber-bg); color: var(--amber); }
+
+    /* ── LEGA GRID ── */
+    .lega-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px,1fr)); gap: 10px; }
+    .lega-box  { border: 1px solid var(--brd); border-radius: 6px; overflow: hidden; }
+    .lega-box-head { background: #4472c4; color: #fff; padding: 5px 10px; font-size: 11.5px; font-weight: 700; }
+    .lega-box table { width: 100%; border-collapse: collapse; font-size: 11.5px; }
+    .lega-box td { padding: 4px 8px; border-bottom: 1px solid #eee; }
+    .lega-box tr:last-child td { border-bottom: none; }
+    .lega-box td:first-child { font-weight: 600; background: #f7f9ff; width: 55%; }
+
+    /* ── REFERENCE TABLE GRID ── */
+    .ref-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(165px,1fr)); gap: 10px; }
+    .ref-box  { border: 1px solid var(--brd); border-radius: 6px; overflow: hidden; }
+    .ref-head { background: var(--blue); color: #fff; padding: 5px 10px; font-size: 11px; font-weight: 700; }
+    .ref-box table { width: 100%; border-collapse: collapse; font-size: 11px; }
+    .ref-box td { padding: 3px 8px; border-bottom: 1px solid #eee; vertical-align: middle; }
+    .ref-box tr:last-child td { border-bottom: none; }
+    .ref-box td:first-child { background: #f7f9ff; font-weight: 600; }
+    .ref-box td:last-child  { text-align: center; font-weight: 700; }
+    .pos  { color: #1a5e25; }
+    .neg  { color: #c62828; }
+    .zero { color: #888; }
+
+    /* ── COMPETITION CARD ── */
+    .comp-hdr  { padding: 13px 18px; display: flex; align-items: center; gap: 12px;
+                 position: sticky; top: var(--nav-h); z-index: 20;
+                 border-radius: 9px 9px 0 0;
+                 box-shadow: 0 3px 8px rgba(0,0,0,.22); }
+    .comp-icon { font-size: 24px; }
+    .comp-hdr h2  { font-size: 15px; font-weight: 700; color: #fff; margin: 0; }
+    .comp-hdr .sub { font-size: 11px; color: rgba(255,255,255,.70); margin-top: 2px; }
+
+    /* ── SETTINGS TABLE ── */
+    .stbl { width: 100%; border-collapse: collapse; }
+    .stbl-cat td { background: #1c2d4f; color: #8ab4ff; font-size: 10.5px; font-weight: 700;
+                   padding: 5px 12px; letter-spacing: .6px; text-transform: uppercase;
+                   position: sticky; top: calc(var(--nav-h) + var(--comphdr-h)); z-index: 5; }
+    .stbl td { padding: 5px 10px; border-bottom: 1px solid var(--brd);
+               font-size: 12px; vertical-align: middle; }
+    .stbl tr:last-child td { border-bottom: none; }
+
+    /* Column widths */
+    .sn { width: 185px; min-width: 130px; }
+    .sv { width: 105px; text-align: center; }
+    .sa { }
+
+    /* Row classes */
+    tr.avail   td.sn { border-left: 3px solid var(--green-brd); background: #f2faf2; font-weight: 600; }
+    tr.unavail td    { color: #bbb; }
+    tr.unavail td.sn { border-left: 3px solid #b39ddb; color: #7e57c2;
+                       text-decoration: line-through; font-size: 11.5px; font-weight: 400; }
+    tr.partial td.sn { border-left: 3px solid #ffb74d; background: #fffde7; font-weight: 600; }
+
+    /* ── CRITERIA DISPLAY ── */
+    .crit-row { display: flex; flex-wrap: wrap; gap: 3px; align-items: center; margin-bottom: 3px; }
+    .cn  { display: inline-flex; width: 22px; height: 22px; border-radius: 50%;
+           background: var(--blue); color: #fff; font-size: 10.5px; font-weight: 700;
+           align-items: center; justify-content: center; }
+    .cn-arr { color: #bbb; font-size: 9px; margin: 0 1px; }
+    .crit-desc { font-size: 10.5px; color: #777; line-height: 1.6; }
+    .crit-phase-lbl { font-size: 11px; font-weight: 700; color: #546e7a;
+                      margin-bottom: 2px; display: block; }
+
+    /* ── INLINE DETAILS (tables inside competition) ── */
+    .comp-tables { padding: 12px 18px 14px; border-top: 1px solid var(--brd); background: #fafbff; }
+    .comp-tables summary { cursor: pointer; font-size: 11.5px; font-weight: 700;
+                           color: var(--blue); padding: 4px 0; user-select: none; }
+    .comp-tables .ref-grid { margin-top: 10px; }
+
+    /* ── CALLOUT ── */
+    .callout { background: var(--blue-lt); border-left: 4px solid var(--blue);
+               padding: 8px 12px; border-radius: 0 5px 5px 0; font-size: 12px; color: #0c3571;
+               margin: 6px 0; }
+    .callout-warn { background: var(--amber-bg); border-left-color: #c9930a; color: #5c4100; }
+
+    /* ── CRITERIA LEGEND (top) ── */
+    .crit-leg-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px,1fr));
+                     gap: 2px 16px; }
+    .crit-leg-item { display: flex; gap: 6px; font-size: 11.5px; padding: 2px 0; align-items: baseline; }
+    .crit-n { font-weight: 700; color: var(--blue); min-width: 18px; text-align: right; }
+
+
+    /* extra space before criteri section */
+    .stbl-cat-criteri td { border-top: 6px solid #eaeff7 !important; }
+    @media (max-width:600px) {
+      .ref-grid, .lega-grid { grid-template-columns: 1fr; }
+      .sn { min-width: 110px; }
+    }
+
+    .fn { font-size: 11px; color: #777; padding: 7px 10px; background: #fafbff;
+          border-radius: 4px; margin-top: 8px; }
+
+    /* ══════════════════════════════
+       PRINT / PDF  (landscape A4)
+    ══════════════════════════════ */
+    @media print {
+      @page {
+        size: A4 landscape;
+        margin: 10mm 12mm;
+      }
+
+      body {
+        background: #fff !important;
+        padding: 0 !important;
+        font-size: 10px !important;
+        color: #000 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      /* Hide nav and footer in print */
+      .navbar, .doc-header .meta { display: none !important; }
+      .comp-hdr { position: static !important; box-shadow: none !important; }
+      .stbl-cat td { position: static !important; }
+
+      /* Doc header compact */
+      .doc-header {
+        border-radius: 0 !important;
+        padding: 8px 12px !important;
+        margin-bottom: 8px !important;
+      }
+      .doc-header h1 { font-size: 13px !important; }
+
+      /* Cards: no shadow, tight margin */
+      .card {
+        border-radius: 4px !important;
+        margin-bottom: 8px !important;
+        border: 1px solid #ccc !important;
+        overflow: visible !important;
+      }
+      .card-title  { font-size: 10px !important; padding: 5px 10px !important; }
+      .card-body   { padding: 8px 10px !important; }
+
+      /* Each competition card starts on a new page */
+      #comp-container .card { page-break-before: always; break-before: page; }
+      /* Reference tables & legend card: no break before */
+      #tabelle, #criteri-leg, #lega { page-break-before: auto !important; break-before: auto !important; }
+
+      /* Avoid splitting a settings row across pages */
+      .stbl tr { page-break-inside: avoid; break-inside: avoid; }
+
+      /* Competition header */
+      .comp-hdr { padding: 7px 12px !important; }
+      .comp-icon { font-size: 16px !important; }
+      .comp-hdr h2  { font-size: 11px !important; }
+      .comp-hdr .sub { font-size: 9px !important; }
+
+      /* Settings table tighter */
+      .stbl td { padding: 3px 7px !important; font-size: 10px !important; }
+      .stbl-cat td { padding: 3px 7px !important; font-size: 9px !important; }
+      .sn { width: 155px !important; min-width: 100px !important; }
+      .sv { width: 80px !important; }
+
+      /* Pills smaller */
+      .pill { font-size: 9px !important; padding: 1px 5px !important; }
+      .cn { width: 18px !important; height: 18px !important; font-size: 9px !important; }
+
+      /* Reference grid: 4 columns on landscape */
+      .ref-grid { grid-template-columns: repeat(4, 1fr) !important; }
+      .lega-grid { grid-template-columns: repeat(4, 1fr) !important; }
+      .crit-leg-grid { grid-template-columns: repeat(3, 1fr) !important; }
+
+      /* Smaller ref tables */
+      .ref-head { font-size: 9px !important; padding: 3px 7px !important; }
+      .ref-box td { font-size: 9px !important; padding: 2px 6px !important; }
+
+      /* Legend bar */
+      .legend-bar { padding: 5px 8px !important; }
+      .leg-item { font-size: 9px !important; }
+
+      /* Lega boxes */
+      .lega-box-head { font-size: 9px !important; padding: 3px 8px !important; }
+      .lega-box td   { font-size: 9.5px !important; padding: 3px 7px !important; }
+
+      /* Criteri */
+      .crit-desc { font-size: 9px !important; }
+      .crit-leg-item { font-size: 9.5px !important; }
+
+      /* Footer */
+      .card:last-child { page-break-before: auto !important; break-before: auto !important; font-size: 9px !important; }
+    }
+
+    /* ── MODAL POPUP ── */
+    #modal-overlay {
+      display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,.5); z-index: 2000;
+      align-items: center; justify-content: center;
+    }
+    #modal-overlay.open { display: flex; }
+    #modal-box {
+      background: #fff; border-radius: 10px;
+      min-width: 210px; max-width: 320px; max-height: 82vh;
+      overflow-y: auto; box-shadow: 0 10px 40px rgba(0,0,0,.3);
+      position: relative; animation: popIn .15s ease-out;
+    }
+    @keyframes popIn {
+      from { transform: scale(.88); opacity: 0; }
+      to   { transform: scale(1);   opacity: 1; }
+    }
+    #modal-close {
+      position: sticky; top: 0; float: right;
+      background: var(--blue); color: #fff; border: none;
+      font-size: 15px; width: 26px; height: 26px; line-height: 26px;
+      text-align: center; cursor: pointer;
+      border-radius: 0 10px 0 6px; z-index: 1;
+    }
+    #modal-close:hover { background: #2e5fab; }
+    #modal-content { padding: 0 0 6px; }
+    #modal-content .ref-head { border-radius: 10px 0 0 0; }
+    .tbl-link {
+      color: var(--blue); font-weight: 700;
+      text-decoration: underline dotted 1.5px; cursor: pointer;
+      font-size: inherit; background: none; border: none; padding: 0;
+    }
+    .tbl-link:hover { color: #2e5fab; text-decoration: underline solid; }
+    @media print { #modal-overlay { display: none !important; } }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════
+     HEADER
+══════════════════════════════════════ -->
+<div class="doc-header">
+  <h1>📋 Default Configurazioni — Per Tipologia di Competizione</h1>
+  <div class="meta">
+    Fonte: Excel allegato Confluence (Quadronica) &nbsp;·&nbsp;
+    Autore: Andrea America &nbsp;·&nbsp;
+    Revisione: 2026-03-18 &nbsp;·&nbsp;
+    Validità: stagioni 2026/2027 e 2027/2028
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     STICKY NAV
+══════════════════════════════════════ -->
+<nav class="navbar">
+  <div class="nav-left">
+    <a class="nav-btn nav-btn-ref" href="#lega">🏟️ Lega</a>
+    <a class="nav-btn nav-btn-ref" href="#tabelle">📊 Tabelle</a>
+    <a class="nav-btn nav-btn-ref" href="#criteri-leg">🔢 Criteri</a>
+  </div>
+  <div class="nav-sep"></div>
+  <div class="nav-right">
+    <a class="nav-btn" href="#sd">⚔️ Scontri Diretti</a>
+    <a class="nav-btn" href="#br">🏹 Battle Royale</a>
+    <a class="nav-btn" href="#tab">🏆 Tabellone</a>
+    <a class="nav-btn" href="#gruppi">👥 Gruppi</a>
+    <a class="nav-btn" href="#champions">🌟 Champions</a>
+    <a class="nav-btn" href="#uvt">🎯 Uno vs Tutti</a>
+    <a class="nav-btn" href="#f1">🏎️ Formula 1</a>
+    <a class="nav-btn" href="#hl">⚡ Highlander</a>
+  </div>
+</nav>
+
+<!-- ══════════════════════════════════════
+     LEGENDA
+══════════════════════════════════════ -->
+<div class="card">
+  <div class="card-title">Legenda colori</div>
+  <div class="card-body">
+    <div class="legend-bar">
+      <div class="leg-item"><div class="leg-dot" style="background:#c6efce;border-color:#81c784"></div>
+        <strong>Verde</strong> — opzione disponibile; valore indicato è il default</div>
+      <div class="leg-item"><div class="leg-dot" style="background:#ede7f6;border-color:#b39ddb"></div>
+        <strong>Viola / barrato</strong> — opzione non presente in questa tipologia</div>
+      <div class="leg-item"><div class="leg-dot" style="background:#fffde7;border-color:#ffb74d"></div>
+        <strong>Giallo</strong> — disponibile parzialmente (solo in alcune fasi)</div>
+    </div>
+    <p style="font-size:12px;color:#555;">
+      I valori <span class="pill p-off">No</span> sono <strong>disabilitati di default</strong> ma attivabili;
+      il testo nella colonna <em>"Se attivo"</em> indica i valori applicati automaticamente all'attivazione.
+    </p>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     SEZIONE LEGA
+══════════════════════════════════════ -->
+<div class="card" id="lega">
+  <div class="card-title">🏟️ Impostazioni a livello Lega (comuni a tutte le competizioni)</div>
+  <div class="card-body">
+    <p style="font-size:12px;margin-bottom:12px;">
+      Configurate una sola volta per l'intera lega; non appaiono nei settaggi delle singole competizioni
+      (celle <em>bianche/grigie</em> nell'Excel).
+    </p>
+    <div class="lega-grid">
+      <div class="lega-box">
+        <div class="lega-box-head">⚙️ Generali</div>
+        <table>
+          <tr><td>Crediti</td><td>1 000</td></tr>
+          <tr><td>Rose invisibili</td><td><span class="pill p-off">No</span></td></tr>
+          <tr><td>Formazioni nascoste</td><td><span class="pill p-off">No</span></td></tr>
+          <tr><td>Timeout inserimento</td><td>5 min</td></tr>
+          <tr><td>Fonte voti</td><td>Fantacalcio</td></tr>
+          <tr><td>Switch</td><td>Plus</td></tr>
+        </table>
+      </div>
+      <div class="lega-box">
+        <div class="lega-box-head">🎽 Rosa Classic</div>
+        <table>
+          <tr><td>Ruoli custom</td><td><span class="pill p-off">No</span></td></tr>
+          <tr><td>Moduli</td><td>Kit base</td></tr>
+          <tr><td>Config. rosa</td><td>Tutti i ruoli fissi</td></tr>
+          <tr><td>Numerosità</td><td>3 – 8 – 8 – 6</td></tr>
+          <tr><td>Panchina</td><td>Fissa · 12 giocatori</td></tr>
+        </table>
+      </div>
+      <div class="lega-box">
+        <div class="lega-box-head">🎽 Rosa Mantra</div>
+        <table>
+          <tr><td>Config. rosa</td><td>Tutti fissi</td></tr>
+          <tr><td>Numerosità</td><td>3 – 25</td></tr>
+        </table>
+      </div>
+      <div class="lega-box">
+        <div class="lega-box-head">👑 Capitano</div>
+        <table>
+          <tr><td>Attivo</td><td><span class="pill p-off">No</span></td></tr>
+          <tr><td>Durata</td><td>Intera stagione</td></tr>
+          <tr><td>Raddoppi</td><td><span class="pill p-off">No</span></td></tr>
+          <tr><td>B/M</td><td>Tabella 9</td></tr>
+        </table>
+      </div>
+      <div class="lega-box">
+        <div class="lega-box-head">👶 Under</div>
+        <table>
+          <tr><td>Attivo</td><td><span class="pill p-off">No</span></td></tr>
+          <tr><td>Età / Numerosità</td><td>21 / 2</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     TABELLE DI RIFERIMENTO B/M
+══════════════════════════════════════ -->
+<div class="card" id="tabelle">
+  <div class="card-title">📊 Tabelle di riferimento B/M (Tab. 1–9)</div>
+  <div class="card-body">
+    <div class="ref-grid">
+
+      <!-- TAB 1 -->
+      <div class="ref-box" id="reftab-1">
+        <div class="ref-head">Tab. 1 — Bonus/Malus principali</div>
+        <table>
+          <tr><td>Gol segnati</td><td class="pos">+3</td></tr>
+          <tr><td>Gol subiti</td><td class="neg">−1</td></tr>
+          <tr><td>Rigori segnati</td><td class="pos">+3</td></tr>
+          <tr><td>Rigori sbagliati</td><td class="neg">−3</td></tr>
+          <tr><td>Rigori parati</td><td class="pos">+3</td></tr>
+          <tr><td>Ammonizioni</td><td class="neg">−0.5</td></tr>
+          <tr><td>Espulsioni</td><td class="neg">−1</td></tr>
+          <tr><td>Assist</td><td class="pos">+1</td></tr>
+          <tr><td>Assist soft</td><td class="pos">+1</td></tr>
+          <tr><td>Assist gold</td><td class="pos">+1</td></tr>
+          <tr><td>Contributi al gol</td><td class="zero">0</td></tr>
+          <tr><td>Autogol</td><td class="neg">−2</td></tr>
+          <tr><td>Gol del pareggio</td><td class="zero">0</td></tr>
+          <tr><td>Gol della vittoria</td><td class="zero">0</td></tr>
+          <tr><td>Porta inviolata</td><td class="pos">+1</td></tr>
+          <tr><td>Player of the match</td><td class="zero">0</td></tr>
+        </table>
+      </div>
+
+      <!-- TAB 2 -->
+      <div class="ref-box" id="reftab-2">
+        <div class="ref-head">Tab. 2 — Mod. Portiere → punti avversario</div>
+        <table>
+          <tr><td>≤ 3</td><td class="pos">+3</td></tr>
+          <tr><td>3.5</td><td class="pos">+2.5</td></tr>
+          <tr><td>4</td><td class="pos">+2</td></tr>
+          <tr><td>4.5</td><td class="pos">+1.5</td></tr>
+          <tr><td>5</td><td class="pos">+1</td></tr>
+          <tr><td>5.5</td><td class="pos">+0.5</td></tr>
+          <tr><td>6</td><td class="zero">0</td></tr>
+          <tr><td>6.5</td><td class="neg">−0.5</td></tr>
+          <tr><td>7</td><td class="neg">−1</td></tr>
+          <tr><td>7.5</td><td class="neg">−1.5</td></tr>
+          <tr><td>8</td><td class="neg">−2</td></tr>
+          <tr><td>8.5</td><td class="neg">−2.5</td></tr>
+          <tr><td>≥ 9</td><td class="neg">−3</td></tr>
+        </table>
+      </div>
+
+      <!-- TAB 3 -->
+      <div class="ref-box" id="reftab-3">
+        <div class="ref-head">Tab. 3 — Mod. Difesa (media voto)</div>
+        <table>
+          <tr><td>&lt; 6</td><td class="zero">0</td></tr>
+          <tr><td>≥ 6 &lt; 6.25</td><td class="pos">+0.5</td></tr>
+          <tr><td>≥ 6.25 &lt; 6.5</td><td class="pos">+1</td></tr>
+          <tr><td>≥ 6.5 &lt; 6.75</td><td class="pos">+2</td></tr>
+          <tr><td>≥ 6.75 &lt; 7</td><td class="pos">+2</td></tr>
+          <tr><td>≥ 7</td><td class="pos">+3</td></tr>
+        </table>
+      </div>
+
+      <!-- TAB 4 -->
+      <div class="ref-box" id="reftab-4">
+        <div class="ref-head">Tab. 4 — Mod. Centrocampo (differenza)</div>
+        <table>
+          <tr><td>2 – 3.5</td><td><span class="pos">+1</span> / <span class="neg">−1</span></td></tr>
+          <tr><td>4 – 5.5</td><td><span class="pos">+2</span> / <span class="neg">−2</span></td></tr>
+          <tr><td>6 – 7.5</td><td><span class="pos">+3</span> / <span class="neg">−3</span></td></tr>
+          <tr><td>≥ 8</td><td><span class="pos">+4</span> / <span class="neg">−4</span></td></tr>
+        </table>
+      </div>
+
+      <!-- TAB 5 -->
+      <div class="ref-box" id="reftab-5">
+        <div class="ref-head">Tab. 5 — Mod. Attacco (voto attaccante)</div>
+        <table>
+          <tr><td>≤ 6</td><td class="zero">0</td></tr>
+          <tr><td>6.5</td><td class="pos">+0.5</td></tr>
+          <tr><td>7</td><td class="pos">+1</td></tr>
+          <tr><td>7.5</td><td class="pos">+1.5</td></tr>
+          <tr><td>≥ 8</td><td class="pos">+2</td></tr>
+        </table>
+      </div>
+
+      <!-- TAB 6 -->
+      <div class="ref-box" id="reftab-6">
+        <div class="ref-head">Tab. 6 — Mod. Modulo</div>
+        <table>
+          <tr><td><strong>5-4-1</strong></td><td class="pos">+1</td></tr>
+          <tr><td><strong>4-5-1</strong></td><td class="pos">+0.5</td></tr>
+          <tr><td><strong>5-3-2</strong></td><td class="pos">+0.5</td></tr>
+          <tr><td><strong>4-4-2</strong></td><td class="zero">0</td></tr>
+          <tr><td><strong>3-5-2</strong></td><td class="neg">−0.5</td></tr>
+          <tr><td><strong>4-3-3</strong></td><td class="neg">−0.5</td></tr>
+          <tr><td><strong>3-4-3</strong></td><td class="neg">−1</td></tr>
+        </table>
+      </div>
+
+      <!-- TAB 7 -->
+      <div class="ref-box" id="reftab-7">
+        <div class="ref-head">Tab. 7 — Fattore Rendimento (N° calciatori voto ≥ 6)</div>
+        <table>
+          <tr><td>0 – 7</td><td class="zero">0</td></tr>
+          <tr><td>8</td><td class="pos">+0.5</td></tr>
+          <tr><td>9</td><td class="pos">+1</td></tr>
+          <tr><td>10</td><td class="pos">+2</td></tr>
+          <tr><td>11</td><td class="pos">+3</td></tr>
+        </table>
+      </div>
+
+      <!-- TAB 8 -->
+      <div class="ref-box" id="reftab-8">
+        <div class="ref-head">Tab. 8 — D-Factor Mantra (media voto)</div>
+        <table>
+          <tr><td>&lt; 6</td><td class="zero">0</td></tr>
+          <tr><td>≥ 6 &lt; 6.25</td><td class="pos">+0.5</td></tr>
+          <tr><td>≥ 6.25 &lt; 6.5</td><td class="pos">+1</td></tr>
+          <tr><td>≥ 6.5 &lt; 6.75</td><td class="pos">+1.5</td></tr>
+          <tr><td>≥ 6.75 &lt; 7</td><td class="pos">+2</td></tr>
+          <tr><td>≥ 7 &lt; 7.25</td><td class="pos">+2.5</td></tr>
+          <tr><td>≥ 7.25</td><td class="pos">+3</td></tr>
+        </table>
+      </div>
+
+      <!-- TAB 9 -->
+      <div class="ref-box" id="reftab-9">
+        <div class="ref-head">Tab. 9 — Capitano (voto → B/M)</div>
+        <table>
+          <tr><td>≤ 4.5</td><td class="neg">−1.5</td></tr>
+          <tr><td>5</td><td class="neg">−1</td></tr>
+          <tr><td>5.5</td><td class="neg">−0.5</td></tr>
+          <tr><td>6</td><td class="zero">0</td></tr>
+          <tr><td>6.5</td><td class="pos">+0.5</td></tr>
+          <tr><td>7</td><td class="pos">+1</td></tr>
+          <tr><td>≥ 7.5</td><td class="pos">+1.5</td></tr>
+        </table>
+      </div>
+
+    </div><!-- /ref-grid -->
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     LEGENDA CRITERI
+══════════════════════════════════════ -->
+<div class="card" id="criteri-leg">
+  <div class="card-title">🔢 Legenda criteri di classifica (codici numerici)</div>
+  <div class="card-body">
+    <div class="crit-leg-grid">
+      <div class="crit-leg-item"><span class="crit-n">1</span><span>Punti <em>(bloccato in pos. 1 dove presente)</em></span></div>
+      <div class="crit-leg-item"><span class="crit-n">2</span><span>Fantapunti</span></div>
+      <div class="crit-leg-item"><span class="crit-n">3</span><span>Gol fatti</span></div>
+      <div class="crit-leg-item"><span class="crit-n">4</span><span>Meno gol subiti</span></div>
+      <div class="crit-leg-item"><span class="crit-n">5</span><span>Più gol subiti</span></div>
+      <div class="crit-leg-item"><span class="crit-n">6</span><span>Differenza reti</span></div>
+      <div class="crit-leg-item"><span class="crit-n">7</span><span>Classifica avulsa</span></div>
+      <div class="crit-leg-item"><span class="crit-n">8</span><span>Incontri (tabellone)</span></div>
+      <div class="crit-leg-item"><span class="crit-n">9</span><span>Supplementari e Rigori</span></div>
+      <div class="crit-leg-item"><span class="crit-n">10</span><span>Somma Punti</span></div>
+      <div class="crit-leg-item"><span class="crit-n">11</span><span>Ex criterio Uefa — gol in trasferta</span></div>
+      <div class="crit-leg-item"><span class="crit-n">12</span><span>Best performance stagionale</span></div>
+      <div class="crit-leg-item"><span class="crit-n">13</span><span>Più giornate vinte (miglior punteggio)</span></div>
+      <div class="crit-leg-item"><span class="crit-n">14</span><span>Fantavoto più alto — titolari e subentrati</span></div>
+      <div class="crit-leg-item"><span class="crit-n">15</span><span>Fantavoto più alto — panchinari non subentrati</span></div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════════════
+     COMPETITION SECTIONS
+══════════════════════════════════════════════════════════════════ -->
+<div id="comp-container">
+<div class="card" id="sd">
+  <div class="comp-hdr" style="background:#1a3a6b;">
+    <span class="comp-icon">⚔️</span>
+    <div>
+      <h2>Scontri Diretti</h2>
+      <div class="sub">Scontri Diretti · Golden X: ✅</div>
+    </div>
+  </div>
+  <table class="stbl">
+    <colgroup><col class="sn"><col class="sv"><col class="sa"></colgroup>
+    <thead><tr><th style="display:none"></th></tr></thead>
+    <tbody>
+      <tr class="stbl-cat"><td colspan="3">🔄 Sostituzioni</td></tr><tr class="avail">
+    <td class="sn">N° Sostituzioni</td>
+    <td class="sv"><span class="pill p-on">Sì</span></td>
+    <td class="sa"><strong>5</strong></td>
+  </tr><tr class="avail">
+    <td class="sn">Tipo (Classic)</td>
+    <td class="sv"><span class="pill p-on">Sì</span></td>
+    <td class="sa"><strong>Hybrid</strong></td>
+  </tr><tr class="avail">
+    <td class="sn">Tipo (Mantra)</td>
+    <td class="sv"><span class="pill p-on">Sì</span></td>
+    <td class="sa"><strong>Master</strong></td>
+  </tr><tr class="avail">
+    <td class="sn">Riserva d'ufficio</td>
+    <td class="sv"><span class="pill p-off">No</span></td>
+    <td class="sa">4 movimenti di campo + 2 portieri</td>
+  </tr><tr class="stbl-cat"><td colspan="3">⚽ Bonus / Malus</td></tr><tr class="avail">
+    <td class="sn">Calcolo B/M per ruolo</td>
+    <td class="sv"><span class="pill p-off">No</span></td>
+    <td class="sa"><button class="tbl-link" onclick="showRefTable(1);return false;">Tabella 1</button></td>
+  </tr><tr class="avail">
+    <td class="sn">Differenzia per ruolo</td>
+    <td class="sv"><span class="pill p-off">No</span></td>
+    <td class="sa"><span style="color:#aaa;font-size:11px;">—</span></td>
+  </tr><tr class="stbl-cat"><td colspan="3">🥅 Soglia Gol & Fasce</td></tr><tr class="avail">
+    <td class="sn">Soglia gol</td>
+    <td class="sv"><span class="pill p-on">Sì</span></td>
+    <td class="sa"><strong>66</strong></td>
+  </tr><tr class="avail">
+    <td class="sn">N° fasce</td>
+    <td class="sv"><span class="pill p-on">Sì</span></td>
+    <td class="sa"><strong>6</strong></td>
+  </tr><tr class="avail">
+    <td class="sn">Limita vittoria</td>
+    <td class="sv"><span class="pill p-off">No</span></td>
+    <td class="sa">valore: <strong>2</strong> &nbsp;·&nbsp; sotto soglia gol: <strong>Sì</strong></td>
+  </tr><tr class="avail">
+    <td class="sn">Limita pareggio</td>
+    <td class="sv"><span class="pill p-off">No</span></td>
+    <td class="sa">valore: <strong>3</strong> &nbsp;·&nbsp; sotto soglia gol: <strong>Sì</strong></td>
+  </tr><tr class="avail">
+    <td class="sn">Autogoal</td>
+    <td class="sv"><span class="pill p-off">No</span></td>
+    <td class="sa">valore: <strong>60</strong></td>
+  </tr><tr class="stbl-cat"><td colspan="3">📋 Formazione & Ammonizioni</td></tr><tr class="avail">
+    <td class="sn">Ammonito senza voto (SV)</td>
+    <td class="sv"><span class="pill p-off">No</span></td>
+    <td class="sa"><span style="color:#aaa;font-size:11px;">—</span></td>
+  </tr><tr class="avail">
+    <td class="sn">Formazione non schierata</td>
+    <td class="sv"><span class="pill p-on">Sì</span></td>
+    <td class="sa"><strong>Recupero</strong><br><span style="font-size:10.5px;color:#888;">alternativa: punteggio politico (valore default: 60)</span></td>
+  </tr><tr class="avail">
+    <td class="sn">SV a tavolino (perdente)</td>
+    <td class="sv"><span class="pill p-on">Sì</span></td>
+    <td class="sa">Punteggio perdente: <strong>SV</strong> &nbsp;·&nbsp; Fantapunti: <strong>60</strong></td>
+  </tr><tr class="stbl-cat"><td colspan="3">🛡️ Modificatori Classic</td></tr><tr class="avail">
+    <td class="sn">Mod. Portiere</td>
+    <td class="sv"><span class="pill p-off">No</span></td>
+    <td class="sa"><button class="tbl-link" onclick="showRefTable(2);return false;">Tabella 2</button><br><span style="font-size:10.5px;color:#888;">con rigore parato: spento</span></td>
+  </tr><tr class="avail">
+    <td class="sn">Mod. Difesa</td>
+    <td class="sv"><span class="pill p-off">No</span></td>
+    <td class="sa"><button class="tbl-link" onclick="showRefTable(3);return false;">Tabella 3</button><br><span style="font-size:10.5px;color:#888;">applicato su: propria squadra</span></td>
+  </tr><tr class="avail">
+    <td class="sn">Mod. Centrocampo</td>
+    <td class="sv"><span class="pill p-off">No</span></td>
+    <td class="sa"><button class="tbl-link" onclick="showRefTable(4);return false;">Tabella 4</button><br><span style="font-size:10.5px;color:#888;">differenza somma voti centrocampo</span></td>
+  </tr><tr class="avail">
+    <td class="sn">Mod. Attacco</td>
+    <td class="sv"><span class="pill p-off">No</span></td>
+    <td class="sa"><button class="tbl-link" onclick="showRefTable(5);return false;">Tabella 5</button><br><span style="font-size:10.5px;color:#888;">escludi attaccante con assist: No</span></td>
+  </tr><tr class="avail">
+    <td class="sn">Bonus Modulo</td>
+    <td class="sv"><span class="pill p-off">No</span></td>
+    <td class="sa"><button class="tbl-link" onclick="showRefTable(6);return false;">Tabella 6</button><br><span style="font-size:10.5px;color:#888;">premia moduli offensivi, penalizza difensivi</span></td>
+  </tr><tr class="stbl-cat"><td colspan="3">🏠 Fattore Casa</td></tr><tr class="avail">
+    <td class="sn">Fattore Casa</td>
+    <td class="sv"><span class="pill p-off">No</span></td>
+    <td class="sa"><button class="tbl-link" onclick="showRefTable(7);return false;">Tabella 7</button></td>
+  </tr><tr class="stbl-cat"><td colspan="3">✨ Golden X</td></tr><tr class="avail">
+    <td class="sn">Golden X</td>
+    <td class="sv"><span class="pill p-off">No</span></td>
+    <td class="sa"><button class="tbl-link" onclick="showRefTable(8);return false;">Tabella 8</button></td>
+  </tr><tr class="stbl-cat stbl-cat-criteri"><td colspan="3">🏅 Criteri di classifica</td></tr><tr class="avail">
+      <td class="sn">Criteri</td>
+      <td colspan="2">
+        <div class="crit-row"><span class="cn">1</span><span class="cn-arr">›</span><span class="cn">2</span><span class="cn-arr">›</span><span class="cn">3</span><span class="cn-arr">›</span><span class="cn">5</span><span class="cn-arr">›</span><span class="cn">4</span><span class="cn-arr">›</span><span class="cn">6</span><span class="cn-arr">›</span><span class="cn">7</span><span class="cn-arr">›</span><span class="cn">13</span></div>
+        <div class="crit-desc"><strong>1</strong>&nbsp;Punti&ensp;·&ensp;<strong>2</strong>&nbsp;Fantapunti&ensp;·&ensp;<strong>3</strong>&nbsp;Gol fatti&ensp;·&ensp;<strong>5</strong>&nbsp;Più gol subiti&ensp;·&ensp;<strong>4</strong>&nbsp;Meno gol subiti&ensp;·&ensp;<strong>6</strong>&nbsp;Differenza reti&ensp;·&ensp;<strong>7</strong>&nbsp;Classifica avulsa&ensp;·&ensp;<strong>13</strong>&nbsp;Giornate vinte (migl. punteggio)</div>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+<div class="card" id="br">
+  <div class="comp-hdr" style="background:#00695c;">
+    <span class="comp-icon">🏹</span>
+    <div>
+      <h2>Battle Royale</h2>
+      <div class="sub">Scontri Diretti · Golden X: ✅</div>
+    </div>
+  </div>
+  <table class="stbl">
+    <colgroup><col class="sn"><col class="sv"><col class="sa"></colgroup>
+    <thead><tr><th style="display:none"></th></tr></thead>
+    <tbody>
+      <tr class="stbl-cat"><td colspan="3">🔄 Sostituzioni</td></tr><tr class="avail">
+    <td class="sn">N° Sostituzioni</td>
+    <td class="sv"><span class="pill p-on">Sì</span></td>
+    <td class="sa"><strong>5</strong></td>
+  </tr><tr class="avail">
+    <td class="sn">Tipo (Classic)</td>
+    <td class="sv"><span class="pill p-on">Sì</span></td>
+    <td class="sa"><strong>Hybrid</strong></td>
+  </tr><tr class="avail">
+    <td class="sn">Tipo (Mantra)</td>
+    <td class="sv"><span class="pill p-on">Sì</span></td>
+    <td class="sa"><strong>Master</strong></td>
+  </tr><tr class="avail">
+    <td class="sn">Riserva d'ufficio</td>
+    <td class="sv"><span class="pill p-off">No</span></td>
+    <td class="sa">4 movimenti di campo + 2 portieri</td>
+  </tr><tr class="stbl-cat"><td colspan="3">⚽ Bonus / Malus</td></tr><tr class="avail">
+    <td class="sn">Calcolo B/M per ruolo</td>
+    <td class="sv"><span class="pill p-off">No</span></td>
+    <td class="sa"><button class="tbl-link" onclick="showRefTable(1);return false;">Tabella 1</button></td>
+  </tr><tr class="avail">
+    <td class="sn">Differenzia per ruolo</td>
+    <td class="sv"><span class="pill p-off">No</span></td>
+    <td class="sa"><span style="color:#aaa;font-size:11px;">—</span></td>
+  </tr><tr class="stbl-cat"><td colspan="3">🥅 Soglia Gol & Fasce</td></tr><tr class="avail">
+    <td class="sn">Soglia gol</td>
+    <td class="sv"><span class="pill p-on">Sì</span></td>
+    <td class="sa"><strong>66</strong></td>
+  </tr><tr class="avail">
+    <td class="sn">N° fasce</td>
+    <td class="sv"><span class="pill p-on">Sì</span></td>
+    <td class="sa"><strong>6</strong></td>
+  </tr><tr class="avail">
+    <td class="sn">Limita vittoria</td>
+    <td class="sv"><span class="pill p-off">No</span></td>
+    <td class="sa">valore: <strong>2</strong> &nbsp;·&nbsp; sotto soglia gol: <strong>Sì</strong></td>
+  </tr><tr class="avail">
+    <td class="sn">Limita pareggio</td>
+    <td class="sv"><span class="pill p-off">No</span></td>
+    <td class="sa">valore: <strong>3</strong> &nbsp;·&nbsp; sotto soglia gol: <strong>Sì</strong></td>
+  </tr><tr class="avail">
+    <td class="sn">Autogoal</td>
+    <td class="sv"><span class="pill p-off">No</span></td>
+    <td class="sa">valore: <strong>60</strong></td>
+  </tr><tr class="stbl-cat"><td colspan="3">📋 Formazione & Ammonizioni</td></tr><tr class="avail">
+    <td class="sn">Ammonito senza voto (SV)</td>
+    <td class="sv"><span class="pill p-off">No</span></td>
+    <td class="sa"><span style="color:#aaa;font-size:11px;">—</span></td>
+  </tr><tr class="avail">
+    <td class="sn">Formazione non schierata</td>
+    <td class="sv"><span class="pill p-on">Sì</span></td>
+    <td class="sa"><strong>Recupero</strong><br><span style="font-size:10.5px;color:#888;">alternativa: punteggio politico (valore default: 60)</span></td>
+  </tr><tr class="avail">
+    <td class="sn">SV a tavolino (perdente)</td>
+    <td class="sv"><span class="pill p-on">Sì</span></td>
+    <td class="sa">Punteggio perdente: <strong>SV</strong> &nbsp;·&nbsp; Fantapunti: <strong>60</strong></td>
+  </tr><tr class="stbl-cat"><td colspan="3">🛡️ Modificatori Classic</td></tr><tr class="avail">
+    <td class="sn">Mod. Portiere</td>
+    <td class="sv"><span class="pill p-off">No</span></td>
+    <td class="sa"><button class="tbl-link" onclick="showRefTable(2);return false;">Tabella 2</button><br><span style="font-size:10.5px;color:#888;">con rigore parato: spento</span></td>
+  </tr><tr class="avail">
+    <td class="sn">Mod. Difesa</td>
+    <td class="sv"><span class="pill p-off">No</span></td>
+    <td class="sa"><button class="tbl-link" onclick="showRefTable(3);return false;">Tabella 3</button><br><span style="font-size:10.5px;color:#888;">applicato su: propria squadra</span></td>
+  </tr><tr class="avail">
+    <td class="sn">Mod. Centrocampo</td>
+    <td class="sv"><span class="pill p-off">No</span></td>
+    <td class="sa"><button class="tbl-link" onclick="showRefTable(4);return false;">Tabella 4</button><br><span style="font-size:10.5px;color:#888;">differenza somma voti centrocampo</span></td>
+  </tr><tr class="avail">
+    <td class="sn">Mod. Attacco</td>
+    <td class="sv"><span class="pill p-off">No</span></td>
+    <td class="sa"><button class="tbl-link" onclick="showRefTable(5);return false;">Tabella 5</button><br><span style="font-size:10.5px;color:#888;">escludi attaccante con assist: No</span></td>
+  </tr><tr class="avail">
+    <td class="sn">Bonus Modulo</td>
+    <td class="sv"><span class="pill p-off">No</span></td>
+    <td class="sa"><button class="tbl-link" onclick="showRefTable(6);return false;">Tabella 6</button><br><span style="font-size:10.5px;color:#888;">premia moduli offensivi, penalizza difensivi</span></td>
+  </tr><tr class="stbl-cat"><td colspan="3">🏠 Fattore Casa</td></tr><tr class="unavail">
+    <td class="sn">Fattore Casa</td>
+    <td class="sv"></td>
+    <td class="sa"><span class="pill p-na">Non disponibile</span></td>
+  </tr><tr class="stbl-cat"><td colspan="3">✨ Golden X</td></tr><tr class="avail">
+    <td class="sn">Golden X</td>
+    <td class="sv"><span class="pill p-off">No</span></td>
+    <td class="sa"><button class="tbl-link" onclick="showRefTable(8);return false;">Tabella 8</button></td>
+  </tr><tr class="stbl-cat stbl-cat-criteri"><td colspan="3">🏅 Criteri di classifica</td></tr><tr class="avail">
+      <td class="sn">Criteri</td>
+      <td colspan="2">
+        <div class="crit-row"><span class="cn">1</span><span class="cn-arr">›</span><span class="cn">13</span><span class="cn-arr">›</span><span class="cn">2</span><span class="cn-arr">›</span><span class="cn">7</span></div>
+        <div class="crit-desc"><strong>1</strong>&nbsp;Punti&ensp;·&ensp;<strong>13</strong>&nbsp;Giornate vinte (migl. punteggio)&ensp;·&ensp;<strong>2</strong>&nbsp;Fantapunti&ensp;·&ensp;<strong>7</strong>&nbsp;Classifica avulsa</div>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+<div class="card" id="tab">
+  <div class="comp-hdr" style="background:#4a148c;">
+    <span class="comp-icon">🏆</span>
+    <div>
+      <h2>Tabellone</h2>
+      <div class="sub">Scontri Diretti · Golden X: ❌</div>
+    </div>
+  </div>
+  <table class="stbl">
+    <colgroup><col class="sn"><col class="sv"><col class="sa"></colgroup>
+    <thead><tr><th style="display:none"></th></tr></thead>
+    <tbody>
+      <tr class="stbl-cat"><td colspan="3">🔄 Sostituzioni</td></tr><tr class="avail">
+    <td class="sn">N° Sostituzioni</td>
+    <td class="sv"><span class="pill p-on">Sì</span></td>
+    <td class="sa"><strong>5</strong></td>
+  </tr><tr class="avail">
+    <td class="sn">Tipo (Classic)</td>
+    <td class="sv"><span class="pill p-on">Sì</span></td>
+    <td class="sa"><strong>Hybrid</strong></td>
+  </tr><tr class="avail">
+    <td class="sn">Tipo (Mantra)</td>
+    <td class="sv"><span class="pill p-on">Sì</span></td>
+    <td class="sa"><strong>Master</strong></td>
+  </tr><tr class="avail">
+    <td class="sn">Riserva d'ufficio</td>
+    <td class="sv"><span class="pill p-off">No</span></td>
+    <td class="sa">4 movimenti di campo + 2 portieri</td>
+  </tr><tr class="stbl-cat"><td colspan="3">⚽ Bonus / Malus</td></tr><tr class="avail">
+    <td class="sn">Calcolo B/M per ruolo</td>
+    <td class="sv"><span class="pill p-off">No</span></td>
+    <td class="sa"><button class="tbl-link" onclick="showRefTable(1);return false;">Tabella 1</button></td>
+  </tr><tr class="avail">
+    <td class="sn">Differenzia per ruolo</td>
+    <td class="sv"><span class="pill p-off">No</span></td>
+    <td class="sa"><span style="color:#aaa;font-size:11px;">—</span></td>
+  </tr><tr class="stbl-cat"><td colspan="3">🥅 Soglia Gol & Fasce</td></tr><tr class="avail">
+    <td class="sn">Soglia gol</td>
+    <td class="sv"><span class="pill p-on">Sì</span></td>
+    <td class="sa"><strong>66</strong></td>
+  </tr><tr class="avail">
+    <td class="sn">N° fasce</td>
+    <td class="sv"><span class="pill p-on">Sì</span></td>
+    <td class="sa"><strong>6</strong></td>
+  </tr><tr class="avail">
+    <td class="sn">Limita vittoria</td>
+    <td class="sv"><span class="pill p-off">No</span></td>
+    <td class="sa">valore: <strong>2</strong> &nbsp;·&nbsp; sotto soglia gol: <strong>Sì</strong></td>
+  </tr><tr class="avail">
+    <td class="sn">Limita pareggio</td>
+    <td class="sv"><span class="pill p-off">No</span></td>
+    <td class="sa">valore: <strong>3</strong> &nbsp;·&nbsp; sotto soglia gol: <strong>Sì</strong></td>
+  </tr><tr class="avail">
+    <td class="sn">Autogoal</td>
+    <td class="sv"><span class="pill p-off">No</span></td>
+    <td class="sa">valore: <strong>60</strong></td>
+  </tr><tr class="stbl-cat"><td colspan="3">📋 Formazione & Ammonizioni</td></tr><tr class="avail">
+    <td class="sn">Ammonito senza voto (SV)</td>
+    <td class="sv"><span class="pill p-off">No</span></td>
+    <td class="sa"><span style="color:#aaa;font-size:11px;">—</span></td>
+  </tr><tr class="avail">
+    <td class="sn">Formazione non schierata</td>
+    <td class="sv"><span class="pill p-on">Sì</span></td>
+    <td class="sa"><strong>Recupero</strong><br><span style="font-size:10.5px;color:#888;">alternativa: punteggio politico (valore default: 60)</span></td>
+  </tr><tr class="avail">
+    <td class="sn">SV a tavolino (perdente)</td>
+    <td class="sv"><span class="pill p-on">Sì</span></td>
+    <td class="sa">Punteggio perdente: <strong>SV</strong> &nbsp;·&nbsp; Fantapunti: <strong>60</strong></td>
+  </tr><tr class="stbl-cat"><td colspan="3">🛡️ Modificatori Classic</td></tr><tr class="avail">
+    <td class="sn">Mod. Portiere</td>
+    <td class="sv"><span class="pill p-off">No</span></td>
+    <td class="sa"><button class="tbl-link" onclick="showRefTable(2);return false;">Tabella 2</button><br><span style="font-size:10.5px;color:#888;">con rigore parato: spento</span></td>
+  </tr><tr class="avail">
+    <td class="sn">Mod. Difesa</td>
+    <td class="sv"><span class="pill p-off">No</span></td>
+    <td class="sa"><button class="tbl-link" onclick="showRefTable(3);return false;">Tabella 3</button><br><span style="font-size:10.5px;color:#888;">applicato su: propria squadra</span></td>
+  </tr><tr class="avail">
+    <td class="sn">Mod. Centrocampo</td>
+    <td class="sv"><span class="pill p-off">No</span></td>
+    <td class="sa"><button class="tbl-link" onclick="showRefTable(4);return false;">Tabella 4</button><br><span style="font-size:10.5px;color:#888;">differenza somma voti centrocampo</span></td>
+  </tr><tr class="avail">
+    <td class="sn">Mod. Attacco</td>
+    <td class="sv"><span class="pill p-off">No</span></td>
+    <td class="sa"><button class="tbl-link" onclick="showRefTable(5);return false;">Tabella 5</button><br><span style="font-size:10.5px;color:#888;">escludi attaccante con assist: No</span></td>
+  </tr><tr class="avail">
+    <td class="sn">Bonus Modulo</td>
+    <td class="sv"><span class="pill p-off">No</span></td>
+    <td class="sa"><button class="tbl-link" onclick="showRefTable(6);return false;">Tabella 6</button><br><span style="font-size:10.5px;color:#888;">premia moduli offensivi, penalizza difensivi</span></td>
+  </tr><tr class="stbl-cat"><td colspan="3">🏠 Fattore Casa</td></tr><tr class="avail">
+    <td class="sn">Fattore Casa</td>
+    <td class="sv"><span class="pill p-off">No</span></td>
+    <td class="sa"><button class="tbl-link" onclick="showRefTable(7);return false;">Tabella 7</button></td>
+  </tr><tr class="stbl-cat"><td colspan="3">✨ Golden X</td></tr><tr class="unavail">
+    <td class="sn">Golden X</td>
+    <td class="sv"></td>
+    <td class="sa"><span class="pill p-na">Non disponibile</span></td>
+  </tr><tr class="stbl-cat"><td colspan="3">📉 Playout</td></tr><tr class="avail">
+    <td class="sn">Playout</td>
+    <td class="sv"><span class="pill p-off">No</span></td>
+    <td class="sa"><span style="color:#aaa;font-size:11px;">—</span></td>
+  </tr><tr class="stbl-cat stbl-cat-criteri"><td colspan="3">🏅 Criteri di classifica</td></tr><tr class="avail">
+      <td class="sn">Criteri</td>
+      <td colspan="2">
+        <div class="crit-row"><span class="cn">8</span><span class="cn-arr">›</span><span class="cn">9</span><span class="cn-arr">›</span><span class="cn">10</span><span class="cn-arr">›</span><span class="cn">11</span></div>
+        <div class="crit-desc"><strong>8</strong>&nbsp;Incontri (tabellone)&ensp;·&ensp;<strong>9</strong>&nbsp;Supplementari e Rigori&ensp;·&ensp;<strong>10</strong>&nbsp;Somma Punti&ensp;·&ensp;<strong>11</strong>&nbsp;Gol in trasferta</div>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+<div class="card" id="gruppi">
+  <div class="comp-hdr" style="background:#bf360c;">
+    <span class="comp-icon">👥</span>
+    <div>
+      <h2>Gruppi</h2>
+      <div class="sub">Scontri Diretti · Golden X: ⚠️ parziale</div>
+    </div>
+  </div>
+  <table class="stbl">
+    <colgroup><col class="sn"><col class="sv"><col class="sa"></colgroup>
+    <thead><tr><th style="display:none"></th></tr></thead>
+    <tbody>
+      <tr class="stbl-cat"><td colspan="3">🔄 Sostituzioni</td></tr><tr class="avail">
+    <td class="sn">N° Sostituzioni</td>
+    <td class="sv"><span class="pill p-on">Sì</span></td>
+    <td class="sa"><strong>5</strong></td>
+  </tr><tr class="avail">
+    <td class="sn">Tipo (Classic)</td>
+    <td class="sv"><span class="pill p-on">Sì</span></td>
+    <td class="sa"><strong>Hybrid</strong></td>
+  </tr><tr class="avail">
+    <td class="sn">Tipo (Mantra)</td>
+    <td class="sv"><span class="pill p-on">Sì</span></td>
+    <td class="sa"><strong>Master</strong></td>
+  </tr><tr class="avail">
+    <td class="sn">Riserva d'ufficio</td>
+    <td class="sv"><span class="pill p-off">No</span></td>
+    <td class="sa">4 movimenti di campo + 2 portieri</td>
+  </tr><tr class="stbl-cat"><td colspan="3">⚽ Bonus / Malus</td></tr><tr class="avail">
+    <td class="sn">Calcolo B/M per ruolo</td>
+    <td class="sv"><span class="pill p-off">No</span></td>
+    <td class="sa"><button class="tbl-link" onclick="showRefTable(1);return false;">Tabella 1</button></td>
+  </tr><tr class="avail">
+    <td class="sn">Differenzia per ruolo</td>
+    <td class="sv"><span class="pill p-off">No</span></td>
+    <td class="sa"><span style="color:#aaa;font-size:11px;">—</span></td>
+  </tr><tr class="stbl-cat"><td colspan="3">🥅 Soglia Gol & Fasce</td></tr><tr class="avail">
+    <td class="sn">Soglia gol</td>
+    <td class="sv"><span class="pill p-on">Sì</span></td>
+    <td class="sa"><strong>66</strong></td>
+  </tr><tr class="avail">
+    <td class="sn">N° fasce</td>
+    <td class="sv"><span class="pill p-on">Sì</span></td>
+    <td class="sa"><strong>6</strong></td>
+  </tr><tr class="avail">
+    <td class="sn">Limita vittoria</td>
+    <td class="sv"><span class="pill p-off">No</span></td>
+    <td class="sa">valore: <strong>2</strong> &nbsp;·&nbsp; sotto soglia gol: <strong>Sì</strong></td>
+  </tr><tr class="avail">
+    <td class="sn">Limita pareggio</td>
+    <td class="sv"><span class="pill p-off">No</span></td>
+    <td class="sa">valore: <strong>3</strong> &nbsp;·&nbsp; sotto soglia gol: <strong>Sì</strong></td>
+  </tr><tr class="avail">
+    <td class="sn">Autogoal</td>
+    <td class="sv"><span class="pill p-off">No</span></td>
+    <td class="sa">valore: <strong>60</strong></td>
+  </tr><tr class="stbl-cat"><td colspan="3">📋 Formazione & Ammonizioni</td></tr><tr class="avail">
+    <td class="sn">Ammonito senza voto (SV)</td>
+    <td class="sv"><span class="pill p-off">No</span></td>
+    <td class="sa"><span style="color:#aaa;font-size:11px;">—</span></td>
+  </tr><tr class="avail">
+    <td class="sn">Formazione non schierata</td>
+    <td class="sv"><span class="pill p-on">Sì</span></td>
+    <td class="sa"><strong>Recupero</strong><br><span style="font-size:10.5px;color:#888;">alternativa: punteggio politico (valore default: 60)</span></td>
+  </tr><tr class="avail">
+    <td class="sn">SV a tavolino (perdente)</td>
+    <td class="sv"><span class="pill p-on">Sì</span></td>
+    <td class="sa">Punteggio perdente: <strong>SV</strong> &nbsp;·&nbsp; Fantapunti: <strong>60</strong></td>
+  </tr><tr class="stbl-cat"><td colspan="3">🛡️ Modificatori Classic</td></tr><tr class="avail">
+    <td class="sn">Mod. Portiere</td>
+    <td class="sv"><span class="pill p-off">No</span></td>
+    <td class="sa"><button class="tbl-link" onclick="showRefTable(2);return false;">Tabella 2</button><br><span style="font-size:10.5px;color:#888;">con rigore parato: spento</span></td>
+  </tr><tr class="avail">
+    <td class="sn">Mod. Difesa</td>
+    <td class="sv"><span class="pill p-off">No</span></td>
+    <td class="sa"><button class="tbl-link" onclick="showRefTable(3);return false;">Tabella 3</button><br><span style="font-size:10.5px;color:#888;">applicato su: propria squadra</span></td>
+  </tr><tr class="avail">
+    <td class="sn">Mod. Centrocampo</td>
+    <td class="sv"><span class="pill p-off">No</span></td>
+    <td class="sa"><button class="tbl-link" onclick="showRefTable(4);return false;">Tabella 4</button><br><span style="font-size:10.5px;color:#888;">differenza somma voti centrocampo</span></td>
+  </tr><tr class="avail">
+    <td class="sn">Mod. Attacco</td>
+    <td class="sv"><span class="pill p-off">No</span></td>
+    <td class="sa"><button class="tbl-link" onclick="showRefTable(5);return false;">Tabella 5</button><br><span style="font-size:10.5px;color:#888;">escludi attaccante con assist: No</span></td>
+  </tr><tr class="avail">
+    <td class="sn">Bonus Modulo</td>
+    <td class="sv"><span class="pill p-off">No</span></td>
+    <td class="sa"><button class="tbl-link" onclick="showRefTable(6);return false;">Tabella 6</button><br><span style="font-size:10.5px;color:#888;">premia moduli offensivi, penalizza difensivi</span></td>
+  </tr><tr class="stbl-cat"><td colspan="3">🏠 Fattore Casa</td></tr><tr class="avail">
+    <td class="sn">Fattore Casa</td>
+    <td class="sv"><span class="pill p-off">No</span></td>
+    <td class="sa"><button class="tbl-link" onclick="showRefTable(7);return false;">Tabella 7</button><br><span style="font-size:10.5px;color:#888;">Entrambe le fasi (gironi + eliminazione)</span></td>
+  </tr><tr class="stbl-cat"><td colspan="3">✨ Golden X</td></tr><tr class="partial">
+    <td class="sn">Golden X</td>
+    <td class="sv"><span class="pill p-off">No</span></td>
+    <td class="sa"><button class="tbl-link" onclick="showRefTable(8);return false;">Tabella 8</button><br><span style="font-size:10.5px;color:#888;">Solo fase a gironi</span></td>
+  </tr><tr class="stbl-cat stbl-cat-criteri"><td colspan="3">🏅 Criteri di classifica</td></tr><tr class="avail">
+      <td class="sn">Criteri<br><span style="font-size:10px;color:#777;font-style:italic;">1ª fase — gironi</span></td>
+      <td colspan="2">
+        <div class="crit-row"><span class="cn">1</span><span class="cn-arr">›</span><span class="cn">2</span><span class="cn-arr">›</span><span class="cn">3</span><span class="cn-arr">›</span><span class="cn">5</span><span class="cn-arr">›</span><span class="cn">4</span><span class="cn-arr">›</span><span class="cn">6</span><span class="cn-arr">›</span><span class="cn">7</span><span class="cn-arr">›</span><span class="cn">13</span></div>
+        <div class="crit-desc"><strong>1</strong>&nbsp;Punti&ensp;·&ensp;<strong>2</strong>&nbsp;Fantapunti&ensp;·&ensp;<strong>3</strong>&nbsp;Gol fatti&ensp;·&ensp;<strong>5</strong>&nbsp;Più gol subiti&ensp;·&ensp;<strong>4</strong>&nbsp;Meno gol subiti&ensp;·&ensp;<strong>6</strong>&nbsp;Differenza reti&ensp;·&ensp;<strong>7</strong>&nbsp;Classifica avulsa&ensp;·&ensp;<strong>13</strong>&nbsp;Giornate vinte (migl. punteggio)</div>
+      </td>
+    </tr><tr class="avail">
+      <td class="sn">Criteri<br><span style="font-size:10px;color:#777;font-style:italic;">2ª fase — eliminazione dir.</span></td>
+      <td colspan="2">
+        <div class="crit-row"><span class="cn">8</span><span class="cn-arr">›</span><span class="cn">9</span><span class="cn-arr">›</span><span class="cn">10</span><span class="cn-arr">›</span><span class="cn">11</span></div>
+        <div class="crit-desc"><strong>8</strong>&nbsp;Incontri (tabellone)&ensp;·&ensp;<strong>9</strong>&nbsp;Supplementari e Rigori&ensp;·&ensp;<strong>10</strong>&nbsp;Somma Punti&ensp;·&ensp;<strong>11</strong>&nbsp;Gol in trasferta</div>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+<div class="card" id="champions">
+  <div class="comp-hdr" style="background:#4e342e;">
+    <span class="comp-icon">🌟</span>
+    <div>
+      <h2>Champions</h2>
+      <div class="sub">Scontri Diretti · Golden X: ⚠️ parziale</div>
+    </div>
+  </div>
+  <table class="stbl">
+    <colgroup><col class="sn"><col class="sv"><col class="sa"></colgroup>
+    <thead><tr><th style="display:none"></th></tr></thead>
+    <tbody>
+      <tr class="stbl-cat"><td colspan="3">🔄 Sostituzioni</td></tr><tr class="avail">
+    <td class="sn">N° Sostituzioni</td>
+    <td class="sv"><span class="pill p-on">Sì</span></td>
+    <td class="sa"><strong>5</strong></td>
+  </tr><tr class="avail">
+    <td class="sn">Tipo (Classic)</td>
+    <td class="sv"><span class="pill p-on">Sì</span></td>
+    <td class="sa"><strong>Hybrid</strong></td>
+  </tr><tr class="avail">
+    <td class="sn">Tipo (Mantra)</td>
+    <td class="sv"><span class="pill p-on">Sì</span></td>
+    <td class="sa"><strong>Master</strong></td>
+  </tr><tr class="avail">
+    <td class="sn">Riserva d'ufficio</td>
+    <td class="sv"><span class="pill p-off">No</span></td>
+    <td class="sa">4 movimenti di campo + 2 portieri</td>
+  </tr><tr class="stbl-cat"><td colspan="3">⚽ Bonus / Malus</td></tr><tr class="avail">
+    <td class="sn">Calcolo B/M per ruolo</td>
+    <td class="sv"><span class="pill p-off">No</span></td>
+    <td class="sa"><button class="tbl-link" onclick="showRefTable(1);return false;">Tabella 1</button></td>
+  </tr><tr class="avail">
+    <td class="sn">Differenzia per ruolo</td>
+    <td class="sv"><span class="pill p-off">No</span></td>
+    <td class="sa"><span style="color:#aaa;font-size:11px;">—</span></td>
+  </tr><tr class="stbl-cat"><td colspan="3">🥅 Soglia Gol & Fasce</td></tr><tr class="avail">
+    <td class="sn">Soglia gol</td>
+    <td class="sv"><span class="pill p-on">Sì</span></td>
+    <td class="sa"><strong>66</strong></td>
+  </tr><tr class="avail">
+    <td class="sn">N° fasce</td>
+    <td class="sv"><span class="pill p-on">Sì</span></td>
+    <td class="sa"><strong>6</strong></td>
+  </tr><tr class="avail">
+    <td class="sn">Limita vittoria</td>
+    <td class="sv"><span class="pill p-off">No</span></td>
+    <td class="sa">valore: <strong>2</strong> &nbsp;·&nbsp; sotto soglia gol: <strong>Sì</strong></td>
+  </tr><tr class="avail">
+    <td class="sn">Limita pareggio</td>
+    <td class="sv"><span class="pill p-off">No</span></td>
+    <td class="sa">valore: <strong>3</strong> &nbsp;·&nbsp; sotto soglia gol: <strong>Sì</strong></td>
+  </tr><tr class="avail">
+    <td class="sn">Autogoal</td>
+    <td class="sv"><span class="pill p-off">No</span></td>
+    <td class="sa">valore: <strong>60</strong></td>
+  </tr><tr class="stbl-cat"><td colspan="3">📋 Formazione & Ammonizioni</td></tr><tr class="avail">
+    <td class="sn">Ammonito senza voto (SV)</td>
+    <td class="sv"><span class="pill p-off">No</span></td>
+    <td class="sa"><span style="color:#aaa;font-size:11px;">—</span></td>
+  </tr><tr class="avail">
+    <td class="sn">Formazione non schierata</td>
+    <td class="sv"><span class="pill p-on">Sì</span></td>
+    <td class="sa"><strong>Recupero</strong><br><span style="font-size:10.5px;color:#888;">alternativa: punteggio politico (valore default: 60)</span></td>
+  </tr><tr class="avail">
+    <td class="sn">SV a tavolino (perdente)</td>
+    <td class="sv"><span class="pill p-on">Sì</span></td>
+    <td class="sa">Punteggio perdente: <strong>SV</strong> &nbsp;·&nbsp; Fantapunti: <strong>60</strong></td>
+  </tr><tr class="stbl-cat"><td colspan="3">🛡️ Modificatori Classic</td></tr><tr class="avail">
+    <td class="sn">Mod. Portiere</td>
+    <td class="sv"><span class="pill p-off">No</span></td>
+    <td class="sa"><button class="tbl-link" onclick="showRefTable(2);return false;">Tabella 2</button><br><span style="font-size:10.5px;color:#888;">con rigore parato: spento</span></td>
+  </tr><tr class="avail">
+    <td class="sn">Mod. Difesa</td>
+    <td class="sv"><span class="pill p-off">No</span></td>
+    <td class="sa"><button class="tbl-link" onclick="showRefTable(3);return false;">Tabella 3</button><br><span style="font-size:10.5px;color:#888;">applicato su: propria squadra</span></td>
+  </tr><tr class="avail">
+    <td class="sn">Mod. Centrocampo</td>
+    <td class="sv"><span class="pill p-off">No</span></td>
+    <td class="sa"><button class="tbl-link" onclick="showRefTable(4);return false;">Tabella 4</button><br><span style="font-size:10.5px;color:#888;">differenza somma voti centrocampo</span></td>
+  </tr><tr class="avail">
+    <td class="sn">Mod. Attacco</td>
+    <td class="sv"><span class="pill p-off">No</span></td>
+    <td class="sa"><button class="tbl-link" onclick="showRefTable(5);return false;">Tabella 5</button><br><span style="font-size:10.5px;color:#888;">escludi attaccante con assist: No</span></td>
+  </tr><tr class="avail">
+    <td class="sn">Bonus Modulo</td>
+    <td class="sv"><span class="pill p-off">No</span></td>
+    <td class="sa"><button class="tbl-link" onclick="showRefTable(6);return false;">Tabella 6</button><br><span style="font-size:10.5px;color:#888;">premia moduli offensivi, penalizza difensivi</span></td>
+  </tr><tr class="stbl-cat"><td colspan="3">🏠 Fattore Casa</td></tr><tr class="avail">
+    <td class="sn">Fattore Casa</td>
+    <td class="sv"><span class="pill p-off">No</span></td>
+    <td class="sa"><button class="tbl-link" onclick="showRefTable(7);return false;">Tabella 7</button><br><span style="font-size:10.5px;color:#888;">Entrambe le fasi (gironi + eliminazione)</span></td>
+  </tr><tr class="stbl-cat"><td colspan="3">✨ Golden X</td></tr><tr class="partial">
+    <td class="sn">Golden X</td>
+    <td class="sv"><span class="pill p-off">No</span></td>
+    <td class="sa"><button class="tbl-link" onclick="showRefTable(8);return false;">Tabella 8</button><br><span style="font-size:10.5px;color:#888;">Solo fase a gironi</span></td>
+  </tr><tr class="stbl-cat stbl-cat-criteri"><td colspan="3">🏅 Criteri di classifica</td></tr><tr class="avail">
+      <td class="sn">Criteri</td>
+      <td colspan="2">
+        <div class="crit-row"><span class="cn">2</span><span class="cn-arr">›</span><span class="cn">13</span><span class="cn-arr">›</span><span class="cn">12</span></div>
+        <div class="crit-desc"><strong>2</strong>&nbsp;Fantapunti&ensp;·&ensp;<strong>13</strong>&nbsp;Giornate vinte (migl. punteggio)&ensp;·&ensp;<strong>12</strong>&nbsp;Best performance stagionale</div>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+<div class="card" id="uvt">
+  <div class="comp-hdr" style="background:#1b5e20;">
+    <span class="comp-icon">🎯</span>
+    <div>
+      <h2>Uno vs Tutti</h2>
+      <div class="sub">Classifiche · Golden X: ❌</div>
+    </div>
+  </div>
+  <table class="stbl">
+    <colgroup><col class="sn"><col class="sv"><col class="sa"></colgroup>
+    <thead><tr><th style="display:none"></th></tr></thead>
+    <tbody>
+      <tr class="stbl-cat"><td colspan="3">🔄 Sostituzioni</td></tr><tr class="avail">
+    <td class="sn">N° Sostituzioni</td>
+    <td class="sv"><span class="pill p-on">Sì</span></td>
+    <td class="sa"><strong>5</strong></td>
+  </tr><tr class="avail">
+    <td class="sn">Tipo (Classic)</td>
+    <td class="sv"><span class="pill p-on">Sì</span></td>
+    <td class="sa"><strong>Hybrid</strong></td>
+  </tr><tr class="avail">
+    <td class="sn">Tipo (Mantra)</td>
+    <td class="sv"><span class="pill p-on">Sì</span></td>
+    <td class="sa"><strong>Master</strong></td>
+  </tr><tr class="avail">
+    <td class="sn">Riserva d'ufficio</td>
+    <td class="sv"><span class="pill p-off">No</span></td>
+    <td class="sa">4 movimenti di campo + 2 portieri</td>
+  </tr><tr class="stbl-cat"><td colspan="3">⚽ Bonus / Malus</td></tr><tr class="avail">
+    <td class="sn">Calcolo B/M per ruolo</td>
+    <td class="sv"><span class="pill p-off">No</span></td>
+    <td class="sa"><button class="tbl-link" onclick="showRefTable(1);return false;">Tabella 1</button></td>
+  </tr><tr class="avail">
+    <td class="sn">Differenzia per ruolo</td>
+    <td class="sv"><span class="pill p-off">No</span></td>
+    <td class="sa"><span style="color:#aaa;font-size:11px;">—</span></td>
+  </tr><tr class="stbl-cat"><td colspan="3">🥅 Soglia Gol & Fasce</td></tr><tr class="unavail">
+    <td class="sn">Soglia gol</td>
+    <td class="sv"></td>
+    <td class="sa"><span class="pill p-na">Non disponibile</span></td>
+  </tr><tr class="unavail">
+    <td class="sn">N° fasce</td>
+    <td class="sv"></td>
+    <td class="sa"><span class="pill p-na">Non disponibile</span></td>
+  </tr><tr class="unavail">
+    <td class="sn">Limita vittoria</td>
+    <td class="sv"></td>
+    <td class="sa"><span class="pill p-na">Non disponibile</span></td>
+  </tr><tr class="unavail">
+    <td class="sn">Limita pareggio</td>
+    <td class="sv"></td>
+    <td class="sa"><span class="pill p-na">Non disponibile</span></td>
+  </tr><tr class="unavail">
+    <td class="sn">Autogoal</td>
+    <td class="sv"></td>
+    <td class="sa"><span class="pill p-na">Non disponibile</span></td>
+  </tr><tr class="stbl-cat"><td colspan="3">📋 Formazione & Ammonizioni</td></tr><tr class="avail">
+    <td class="sn">Ammonito senza voto (SV)</td>
+    <td class="sv"><span class="pill p-off">No</span></td>
+    <td class="sa"><span style="color:#aaa;font-size:11px;">—</span></td>
+  </tr><tr class="avail">
+    <td class="sn">Formazione non schierata</td>
+    <td class="sv"><span class="pill p-on">Sì</span></td>
+    <td class="sa"><strong>Recupero</strong><br><span style="font-size:10.5px;color:#888;">alternativa: punteggio politico (valore default: 60)</span></td>
+  </tr><tr class="unavail">
+    <td class="sn">SV a tavolino</td>
+    <td class="sv"></td>
+    <td class="sa"><span class="pill p-na">Non disponibile</span></td>
+  </tr><tr class="stbl-cat"><td colspan="3">🛡️ Modificatori Classic</td></tr><tr class="unavail">
+    <td class="sn">Mod. Portiere</td>
+    <td class="sv"></td>
+    <td class="sa"><span class="pill p-na">Non disponibile</span></td>
+  </tr><tr class="avail">
+    <td class="sn">Mod. Difesa</td>
+    <td class="sv"><span class="pill p-off">No</span></td>
+    <td class="sa"><button class="tbl-link" onclick="showRefTable(3);return false;">Tabella 3</button><br><span style="font-size:10.5px;color:#888;">applicato su: propria squadra</span></td>
+  </tr><tr class="unavail">
+    <td class="sn">Mod. Centrocampo</td>
+    <td class="sv"></td>
+    <td class="sa"><span class="pill p-na">Non disponibile</span></td>
+  </tr><tr class="avail">
+    <td class="sn">Mod. Attacco</td>
+    <td class="sv"><span class="pill p-off">No</span></td>
+    <td class="sa"><button class="tbl-link" onclick="showRefTable(5);return false;">Tabella 5</button><br><span style="font-size:10.5px;color:#888;">escludi attaccante con assist: No</span></td>
+  </tr><tr class="avail">
+    <td class="sn">Bonus Modulo</td>
+    <td class="sv"><span class="pill p-off">No</span></td>
+    <td class="sa"><button class="tbl-link" onclick="showRefTable(6);return false;">Tabella 6</button><br><span style="font-size:10.5px;color:#888;">premia moduli offensivi, penalizza difensivi</span></td>
+  </tr><tr class="stbl-cat"><td colspan="3">🏠 Fattore Casa</td></tr><tr class="unavail">
+    <td class="sn">Fattore Casa</td>
+    <td class="sv"></td>
+    <td class="sa"><span class="pill p-na">Non disponibile</span></td>
+  </tr><tr class="stbl-cat"><td colspan="3">✨ Golden X</td></tr><tr class="unavail">
+    <td class="sn">Golden X</td>
+    <td class="sv"></td>
+    <td class="sa"><span class="pill p-na">Non disponibile</span></td>
+  </tr><tr class="stbl-cat stbl-cat-criteri"><td colspan="3">🏅 Criteri di classifica</td></tr><tr class="avail">
+      <td class="sn">Criteri</td>
+      <td colspan="2">
+        <div class="crit-row"><span class="cn">1</span><span class="cn-arr">›</span><span class="cn">13</span><span class="cn-arr">›</span><span class="cn">12</span></div>
+        <div class="crit-desc"><strong>1</strong>&nbsp;Punti&ensp;·&ensp;<strong>13</strong>&nbsp;Giornate vinte (migl. punteggio)&ensp;·&ensp;<strong>12</strong>&nbsp;Best performance stagionale</div>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+<div class="card" id="f1">
+  <div class="comp-hdr" style="background:#b71c1c;">
+    <span class="comp-icon">🏎️</span>
+    <div>
+      <h2>Formula 1</h2>
+      <div class="sub">Classifiche · Golden X: ❌</div>
+    </div>
+  </div>
+  <table class="stbl">
+    <colgroup><col class="sn"><col class="sv"><col class="sa"></colgroup>
+    <thead><tr><th style="display:none"></th></tr></thead>
+    <tbody>
+      <tr class="stbl-cat"><td colspan="3">🔄 Sostituzioni</td></tr><tr class="avail">
+    <td class="sn">N° Sostituzioni</td>
+    <td class="sv"><span class="pill p-on">Sì</span></td>
+    <td class="sa"><strong>5</strong></td>
+  </tr><tr class="avail">
+    <td class="sn">Tipo (Classic)</td>
+    <td class="sv"><span class="pill p-on">Sì</span></td>
+    <td class="sa"><strong>Hybrid</strong></td>
+  </tr><tr class="avail">
+    <td class="sn">Tipo (Mantra)</td>
+    <td class="sv"><span class="pill p-on">Sì</span></td>
+    <td class="sa"><strong>Master</strong></td>
+  </tr><tr class="avail">
+    <td class="sn">Riserva d'ufficio</td>
+    <td class="sv"><span class="pill p-off">No</span></td>
+    <td class="sa">4 movimenti di campo + 2 portieri</td>
+  </tr><tr class="stbl-cat"><td colspan="3">⚽ Bonus / Malus</td></tr><tr class="avail">
+    <td class="sn">Calcolo B/M per ruolo</td>
+    <td class="sv"><span class="pill p-off">No</span></td>
+    <td class="sa"><button class="tbl-link" onclick="showRefTable(1);return false;">Tabella 1</button></td>
+  </tr><tr class="avail">
+    <td class="sn">Differenzia per ruolo</td>
+    <td class="sv"><span class="pill p-off">No</span></td>
+    <td class="sa"><span style="color:#aaa;font-size:11px;">—</span></td>
+  </tr><tr class="stbl-cat"><td colspan="3">🥅 Soglia Gol & Fasce</td></tr><tr class="unavail">
+    <td class="sn">Soglia gol</td>
+    <td class="sv"></td>
+    <td class="sa"><span class="pill p-na">Non disponibile</span></td>
+  </tr><tr class="unavail">
+    <td class="sn">N° fasce</td>
+    <td class="sv"></td>
+    <td class="sa"><span class="pill p-na">Non disponibile</span></td>
+  </tr><tr class="unavail">
+    <td class="sn">Limita vittoria</td>
+    <td class="sv"></td>
+    <td class="sa"><span class="pill p-na">Non disponibile</span></td>
+  </tr><tr class="unavail">
+    <td class="sn">Limita pareggio</td>
+    <td class="sv"></td>
+    <td class="sa"><span class="pill p-na">Non disponibile</span></td>
+  </tr><tr class="unavail">
+    <td class="sn">Autogoal</td>
+    <td class="sv"></td>
+    <td class="sa"><span class="pill p-na">Non disponibile</span></td>
+  </tr><tr class="stbl-cat"><td colspan="3">📋 Formazione & Ammonizioni</td></tr><tr class="avail">
+    <td class="sn">Ammonito senza voto (SV)</td>
+    <td class="sv"><span class="pill p-off">No</span></td>
+    <td class="sa"><span style="color:#aaa;font-size:11px;">—</span></td>
+  </tr><tr class="avail">
+    <td class="sn">Formazione non schierata</td>
+    <td class="sv"><span class="pill p-on">Sì</span></td>
+    <td class="sa"><strong>Recupero</strong><br><span style="font-size:10.5px;color:#888;">alternativa: punteggio politico (valore default: 60)</span></td>
+  </tr><tr class="unavail">
+    <td class="sn">SV a tavolino</td>
+    <td class="sv"></td>
+    <td class="sa"><span class="pill p-na">Non disponibile</span></td>
+  </tr><tr class="stbl-cat"><td colspan="3">🛡️ Modificatori Classic</td></tr><tr class="unavail">
+    <td class="sn">Mod. Portiere</td>
+    <td class="sv"></td>
+    <td class="sa"><span class="pill p-na">Non disponibile</span></td>
+  </tr><tr class="avail">
+    <td class="sn">Mod. Difesa</td>
+    <td class="sv"><span class="pill p-off">No</span></td>
+    <td class="sa"><button class="tbl-link" onclick="showRefTable(3);return false;">Tabella 3</button><br><span style="font-size:10.5px;color:#888;">applicato su: propria squadra</span></td>
+  </tr><tr class="unavail">
+    <td class="sn">Mod. Centrocampo</td>
+    <td class="sv"></td>
+    <td class="sa"><span class="pill p-na">Non disponibile</span></td>
+  </tr><tr class="avail">
+    <td class="sn">Mod. Attacco</td>
+    <td class="sv"><span class="pill p-off">No</span></td>
+    <td class="sa"><button class="tbl-link" onclick="showRefTable(5);return false;">Tabella 5</button><br><span style="font-size:10.5px;color:#888;">escludi attaccante con assist: No</span></td>
+  </tr><tr class="avail">
+    <td class="sn">Bonus Modulo</td>
+    <td class="sv"><span class="pill p-off">No</span></td>
+    <td class="sa"><button class="tbl-link" onclick="showRefTable(6);return false;">Tabella 6</button><br><span style="font-size:10.5px;color:#888;">premia moduli offensivi, penalizza difensivi</span></td>
+  </tr><tr class="stbl-cat"><td colspan="3">🏠 Fattore Casa</td></tr><tr class="unavail">
+    <td class="sn">Fattore Casa</td>
+    <td class="sv"></td>
+    <td class="sa"><span class="pill p-na">Non disponibile</span></td>
+  </tr><tr class="stbl-cat"><td colspan="3">✨ Golden X</td></tr><tr class="unavail">
+    <td class="sn">Golden X</td>
+    <td class="sv"></td>
+    <td class="sa"><span class="pill p-na">Non disponibile</span></td>
+  </tr><tr class="stbl-cat"><td colspan="3">🏎️ Formula 1 — specifico</td></tr><tr class="avail">
+    <td class="sn">Punteggi F1</td>
+    <td class="sv"><span class="pill p-on">Sì</span></td>
+    <td class="sa"><button class="tbl-link" onclick="showRefTable(9);return false;">Tabella 9</button></td>
+  </tr><tr class="stbl-cat stbl-cat-criteri"><td colspan="3">🏅 Criteri di classifica</td></tr><tr class="avail">
+      <td class="sn">Criteri</td>
+      <td colspan="2">
+        <div class="crit-row"><span class="cn">14</span><span class="cn-arr">›</span><span class="cn">15</span></div>
+        <div class="crit-desc"><strong>14</strong>&nbsp;Fantavoto più alto (tit./sub.)&ensp;·&ensp;<strong>15</strong>&nbsp;Fantavoto più alto (panch. non sub.)</div>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+<div class="card" id="hl">
+  <div class="comp-hdr" style="background:#37474f;">
+    <span class="comp-icon">⚡</span>
+    <div>
+      <h2>Highlander</h2>
+      <div class="sub">Classifiche · Golden X: ❌</div>
+    </div>
+  </div>
+  <table class="stbl">
+    <colgroup><col class="sn"><col class="sv"><col class="sa"></colgroup>
+    <thead><tr><th style="display:none"></th></tr></thead>
+    <tbody><tr class="stbl-cat"><td colspan="3">🔄 Sostituzioni</td></tr><tr class="avail"><td class="sn">N° Sostituzioni</td><td class="sv"><span class="pill p-on">Sì</span></td><td class="sa"><strong>5</strong></td></tr><tr class="avail"><td class="sn">Tipo (Classic)</td><td class="sv"><span class="pill p-on">Sì</span></td><td class="sa"><strong>Hybrid</strong></td></tr><tr class="avail"><td class="sn">Tipo (Mantra)</td><td class="sv"><span class="pill p-on">Sì</span></td><td class="sa"><strong>Master</strong></td></tr><tr class="avail"><td class="sn">Riserva d'ufficio</td><td class="sv"><span class="pill p-off">No</span></td><td class="sa">4 movimenti di campo + 2 portieri</td></tr><tr class="stbl-cat"><td colspan="3">⚽ Bonus / Malus</td></tr><tr class="avail"><td class="sn">Calcolo B/M per ruolo</td><td class="sv"><span class="pill p-off">No</span></td><td class="sa"><button class="tbl-link" onclick="showRefTable(1);return false;">Tabella 1</button></td></tr><tr class="avail"><td class="sn">Differenzia per ruolo</td><td class="sv"><span class="pill p-off">No</span></td><td class="sa"><span style="color:#aaa;font-size:11px;">—</span></td></tr><tr class="stbl-cat"><td colspan="3">🥅 Soglia Gol & Fasce</td></tr><tr class="unavail"><td class="sn">Soglia gol</td><td class="sv"></td><td class="sa"><span class="pill p-na">Non disponibile</span></td></tr><tr class="unavail"><td class="sn">N° fasce</td><td class="sv"></td><td class="sa"><span class="pill p-na">Non disponibile</span></td></tr><tr class="unavail"><td class="sn">Limita vittoria</td><td class="sv"></td><td class="sa"><span class="pill p-na">Non disponibile</span></td></tr><tr class="unavail"><td class="sn">Limita pareggio</td><td class="sv"></td><td class="sa"><span class="pill p-na">Non disponibile</span></td></tr><tr class="unavail"><td class="sn">Autogoal</td><td class="sv"></td><td class="sa"><span class="pill p-na">Non disponibile</span></td></tr><tr class="stbl-cat"><td colspan="3">📋 Formazione & Ammonizioni</td></tr><tr class="avail"><td class="sn">Ammonito senza voto (SV)</td><td class="sv"><span class="pill p-off">No</span></td><td class="sa"><span style="color:#aaa;font-size:11px;">—</span></td></tr><tr class="avail"><td class="sn">Formazione non schierata</td><td class="sv"><span class="pill p-on">Sì</span></td><td class="sa"><strong>Recupero</strong><br><span style="font-size:10.5px;color:#888;">alternativa: punteggio politico (valore default: 60)</span></td></tr><tr class="unavail"><td class="sn">SV a tavolino</td><td class="sv"></td><td class="sa"><span class="pill p-na">Non disponibile</span></td></tr><tr class="stbl-cat"><td colspan="3">🛡️ Modificatori Classic</td></tr><tr class="unavail"><td class="sn">Mod. Portiere</td><td class="sv"></td><td class="sa"><span class="pill p-na">Non disponibile</span></td></tr><tr class="avail"><td class="sn">Mod. Difesa</td><td class="sv"><span class="pill p-off">No</span></td><td class="sa"><button class="tbl-link" onclick="showRefTable(3);return false;">Tabella 3</button><br><span style="font-size:10.5px;color:#888;">applicato su: propria squadra</span></td></tr><tr class="unavail"><td class="sn">Mod. Centrocampo</td><td class="sv"></td><td class="sa"><span class="pill p-na">Non disponibile</span></td></tr><tr class="avail"><td class="sn">Mod. Attacco</td><td class="sv"><span class="pill p-off">No</span></td><td class="sa"><button class="tbl-link" onclick="showRefTable(5);return false;">Tabella 5</button><br><span style="font-size:10.5px;color:#888;">escludi attaccante con assist: No</span></td></tr><tr class="avail"><td class="sn">Bonus Modulo</td><td class="sv"><span class="pill p-off">No</span></td><td class="sa"><button class="tbl-link" onclick="showRefTable(6);return false;">Tabella 6</button><br><span style="font-size:10.5px;color:#888;">premia moduli offensivi, penalizza difensivi</span></td></tr><tr class="stbl-cat"><td colspan="3">🏠 Fattore Casa</td></tr><tr class="unavail"><td class="sn">Fattore Casa</td><td class="sv"></td><td class="sa"><span class="pill p-na">Non disponibile</span></td></tr><tr class="stbl-cat"><td colspan="3">✨ Golden X</td></tr><tr class="unavail"><td class="sn">Golden X</td><td class="sv"></td><td class="sa"><span class="pill p-na">Non disponibile</span></td></tr><tr class="stbl-cat stbl-cat-criteri"><td colspan="3">🏅 Criteri di classifica</td></tr><tr class="avail"><td class="sn">Criteri</td><td colspan="2"><span class="pill p-warn">Da definire</span></td></tr></tbody>
+  </table>
+</div>
+</div>
+<script>
+/* Only interactive: modal popup + sticky height recalc */
+function showRefTable(n){
+  var src = document.getElementById('reftab-' + n);
+  if(!src) return;
+  document.getElementById('modal-content').innerHTML = src.outerHTML;
+  document.getElementById('modal-overlay').classList.add('open');
+}
+function closeModal(){
+  document.getElementById('modal-overlay').classList.remove('open');
+}
+document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeModal(); });
+function recalcSticky(){
+  var nav = document.querySelector('.navbar');
+  var hdr = document.querySelector('.comp-hdr');
+  var root = document.documentElement;
+  if(nav) root.style.setProperty('--nav-h', nav.offsetHeight + 'px');
+  if(hdr) root.style.setProperty('--comphdr-h', hdr.offsetHeight + 'px');
+}
+window.addEventListener('resize', recalcSticky);
+setTimeout(recalcSticky, 0);
+</script>
+
+<!-- ── MODAL POPUP ── -->
+<div id="modal-overlay" onclick="closeModal()">
+  <div id="modal-box" onclick="event.stopPropagation()">
+    <button id="modal-close" onclick="closeModal()" title="Chiudi">×</button>
+    <div id="modal-content"></div>
+  </div>
+</div>
+
+
+</body>
+</html>
